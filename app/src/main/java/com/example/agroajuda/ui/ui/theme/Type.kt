@@ -1,4 +1,4 @@
-package com.example.agroajuda.ui.theme
+package com.example.agroajuda.ui.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

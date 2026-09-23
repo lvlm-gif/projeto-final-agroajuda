@@ -1,6 +1,5 @@
-package com.example.agroajuda.ui.theme
+package com.example.agroajuda.ui.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
