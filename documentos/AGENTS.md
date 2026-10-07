@@ -54,7 +54,6 @@ O projeto utiliza:
 - Retrofit;
 - Gson Converter;
 - Coroutines;
-- Flow;
 - KSP.
 
 A IA deve utilizar as tecnologias já presentes no projeto antes de sugerir novas dependências.
