@@ -4,7 +4,7 @@ O AgroAjuda é um aplicativo desenvolvido para auxiliar pequenos agricultores a 
 
 🎯 Objetivo
 
-O projeto tem como objetivo aproximar pequenos agricultores de serviços de assistência técnica, oferecendo uma forma simples e acessível de solicitar ajuda para suas atividades agrícolas.
+O projeto tem como objetivo aproximar pequenos agricultores de serviços de assistência técnica, oferecendo uma forma simples e acessível de solicitar ajuda para suas atividades agrícolas..
 
 📱 Funcionalidades
 
