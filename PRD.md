@@ -6,7 +6,7 @@
 | **Grupo**               |                                                                                          |
 | **Autores**             | Maria Miriam Marques Dos Santos, Larissa Vitória Lira de Miranda e Taiane Duarte Rezende |
 | **Turma**               | A3 — 3º ano Ensino Médio                                                                 |
-| **Repositório**         | https://github.com/mmms6-create/AgroAjuda.git                                            |
+| **Repositório**         |(https://github.com/lvlm-gif/projeto-final-agroajuda.git)                                           |
 | **Versão do documento** | 1.0                                                                                      |
 | **Última atualização**  | 23/09/2026                                                                               |
 | **Status**              | (X) Rascunho ( ) Em revisão ( ) Aprovado                                                 |
