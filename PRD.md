@@ -95,8 +95,6 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
       │   [Cadastro de Profissional]
       │          ↓
       │       Salvar
-      │          ↓
-      │   [Tela Principal]
       │
       └── Selecionar profissional
                  ↓
@@ -116,10 +114,11 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 
 **Rascunhos das telas:**
 
-* `docs/telas/01-principal.png`
-* `docs/telas/02-cadastro-profissional.png`
-* `docs/telas/03-detalhes-profissional.png`
-* `docs/telas/04-confirmacao.png`
+* `docs/AgroAjuda-tela-3-profissional-solicitacao`
+* `docs/AgroAjuda-tela-2-cadastro`
+* `docs/AgroAjuda-tela-1-inicio`
+* `docs/AgroAjuda-tela-4-confirmacao`
+* `docs/AgroAjuda-Logo`
 
 ---
 
@@ -147,12 +146,23 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 | `status`         | String | Sim         | Status da solicitação     |
 | `data`           | String | Sim         | Data da solicitação       |
 
+**Entidade:** `Cliente`
+
+| Campo            | Tipo   | Obrigatório | Observação                |
+| ---------------- | ------ | ----------- | ------------------------- |
+| `id`             | Long   | Sim         | Chave primária autogerada |
+| `nome`           | String | Sim         | Nome do cliente           |
+| `telefone`       | String | Sim         | Telefone para contato     |
+| `email`          | String | Sim         | E-mail do cliente         |
+| `localizacao`    | String | Sim         | Localização ou município do cliente |
+
+
 **Operações necessárias:**
 
 * (X) inserir
 * (X) listar
-* ( ) atualizar
-* ( ) excluir
+* (X) atualizar
+* (X) excluir
 
 ---
 
@@ -169,7 +179,7 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 | Rede                   | Retrofit 2 + Gson Converter     |
 | Concorrência           | Kotlin Coroutines + Flow        |
 | Injeção de dependência | Não será utilizada nesta versão |
-| `minSdk` / `targetSdk` | Definir no projeto              |
+| `minSdk` / `targetSdk` | A definir                       |
 
 **Organização de pastas:**
 
@@ -231,8 +241,8 @@ Neste primeiro momento não serão implementadas entidades Room, DAOs, interface
 | Nome do app                   | AgroAjuda                              | `strings.xml`        |
 | Cor principal                 | `#4CAF50`                              | `Color.kt`           |
 | Cor secundária                | A definir                              | `Color.kt`           |
-| Ícone                         | Folha verde junto com símbolo de ajuda | `loja/icone-512.png` |
-| `applicationId`               | `br.edu.ifpe.agroajuda`                | `build.gradle.kts`   |
+| Ícone                         | Folha verde                            | `docs/AgroAjuda-Logo`|
+| `applicationId`               | `com.example.agroajuda`                | `build.gradle.kts`   |
 | `versionName` / `versionCode` | `1.0` / `1`                            | `build.gradle.kts`   |
 
 **Material da loja:**
@@ -241,11 +251,6 @@ Neste primeiro momento não serão implementadas entidades Room, DAOs, interface
 | --------------------- | ------------- | ----------------------------------------------- |
 | Título                | 30 caracteres | AgroAjuda                                       |
 | Descrição curta       | 80 caracteres | Assistência técnica para pequenos agricultores. |
-| Descrição completa    | —             | `loja/descricao.md`                             |
-| Imagem de destaque    | 1024×500      | `loja/destaque-1024x500.png`                    |
-| Screenshots           | Mín. 2        | `loja/screenshots/`                             |
-| Esboço de privacidade | —             | `loja/privacidade.md`                           |
-| Arquivo `.aab`        | —             | `loja/app-release.aab`                          |
 
 ---
 
@@ -266,8 +271,8 @@ Neste primeiro momento não serão implementadas entidades Room, DAOs, interface
 
 **Testado em:**
 
-* Aparelho 1: ____________________
-* Android: ____________________
+* Aparelho 1: Maria Miriam
+* Android: Xiaomi 2201117TY
 * Aparelho 2: ____________________
 * Android: ____________________
 
@@ -308,7 +313,6 @@ O PRD será utilizado como referência para orientar a IA sobre o que deve ser i
 **Recursos que vamos usar:**
 
 * (X) Chat
-* (X) Agent Mode
 * (X) Explain Code
 * (X) Ask Gemini no Logcat
 * (X) Generate Unit Tests
@@ -356,4 +360,4 @@ O PRD será utilizado como referência para orientar a IA sobre o que deve ser i
 | Versão | Data       | Autor                                                                                    | O que mudou                       |
 | ------ | ---------- | ---------------------------------------------------------------------------------------- | --------------------------------- |
 | 1.0    | 23/09/2026 | Maria Miriam Marques Dos Santos, Larissa Vitória Lira de Miranda e Taiane Duarte Rezende | Criação do PRD com base no Canvas |
-|        |            |                                                                                          |                                   |
+| 1.1    | 07/10/2026 | Maria Miriam Marques Dos Santos, Larissa Vitória Lira de Miranda e Taiane Duarte Rezende | Revisão do PRD|
