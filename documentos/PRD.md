@@ -6,7 +6,7 @@
 | **Grupo**               |                                                                                          |
 | **Autores**             | Maria Miriam Marques Dos Santos, Larissa Vitória Lira de Miranda e Taiane Duarte Rezende |
 | **Turma**               | A3 — 3º ano Ensino Médio                                                                 |
-| **Repositório**         |(https://github.com/lvlm-gif/projeto-final-agroajuda.git)                                           |
+| **Repositório**         |(https://github.com/lvlm-gif/projeto-final-agroajuda.git)                                 |
 | **Versão do documento** | 1.0                                                                                      |
 | **Última atualização**  | 23/09/2026                                                                               |
 | **Status**              | (X) Rascunho ( ) Em revisão ( ) Aprovado                                                 |
@@ -130,7 +130,7 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 
 | Campo           | Tipo   | Obrigatório | Observação                   |
 | --------------- | ------ | ----------- | ---------------------------- |
-| `id`            | Long   | Sim         | Chave primária autogerada    |
+| `id`            | Int    | Sim         | Chave primária autogerada    |
 | `nome`          | String | Sim         | Nome do profissional         |
 | `tipo`          | String | Sim         | Agrônomo ou técnico agrícola |
 | `especialidade` | String | Sim         | Área de atuação              |
@@ -141,8 +141,8 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 
 | Campo            | Tipo   | Obrigatório | Observação                |
 | ---------------- | ------ | ----------- | ------------------------- |
-| `id`             | Long   | Sim         | Chave primária autogerada |
-| `profissionalId` | Long   | Sim         | Profissional escolhido    |
+| `id`             | Int    | Sim         | Chave primária autogerada |
+| `profissionalId` | Int    | Sim         | Profissional escolhido    |
 | `status`         | String | Sim         | Status da solicitação     |
 | `data`           | String | Sim         | Data da solicitação       |
 
@@ -150,7 +150,7 @@ Pequenos agricultores de diferentes idades que precisam de orientação ou assis
 
 | Campo            | Tipo   | Obrigatório | Observação                |
 | ---------------- | ------ | ----------- | ------------------------- |
-| `id`             | Long   | Sim         | Chave primária autogerada |
+| `id`             | Int    | Sim         | Chave primária autogerada |
 | `nome`           | String | Sim         | Nome do cliente           |
 | `telefone`       | String | Sim         | Telefone para contato     |
 | `email`          | String | Sim         | E-mail do cliente         |
