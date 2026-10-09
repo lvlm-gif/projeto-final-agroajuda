@@ -6,21 +6,22 @@
     <group
         android:translateX="15"
         android:translateY="10">
-        <!-- Right Leaf (Light Green) -->
+        <!-- Right Leaf (Primary Green #397D45) -->
         <path
-            android:fillColor="#77bc3f"
+            android:fillColor="#397D45"
             android:pathData="M39.1,81.4c0,0,3.3-43.1,41.4-56.5c13.7-4.8,21.5,1.5,20.2,11.5c-1.3,10-15.6,33.5-47.5,45.5C45.5,74.9,39.1,81.4,39.1,81.4z" />
-        <!-- Left Leaf (Dark Green) -->
+        <!-- Left Leaf (Dark Green #183D27) -->
         <path
-            android:fillColor="#237036"
+            android:fillColor="#183D27"
             android:pathData="M39.1,81.4c0,0-23.7-11.8-29.1-3.6c-5.4,8.2,3.4,18.4,14.5,18.2c11.1-0.2,14.6-14.6,14.6-14.6" />
-        <!-- Vein in Right Leaf (Simplified as a white path) -->
+        <!-- Vein in Right Leaf -->
         <path
             android:fillColor="#FFFFFF"
+            android:fillAlpha="0.3"
             android:pathData="M41,78c15,-25 40,-35 55,-35c-20,5 -45,15 -55,35z" />
         <!-- Stem -->
         <path
-            android:fillColor="#77bc3f"
+            android:fillColor="#397D45"
             android:pathData="M39.1,81.4c0,5.6 2.2,15.6 2.2,15.6h-4.4c0,0 -2.2-10 -2.2-15.6z" />
     </group>
 </vector>

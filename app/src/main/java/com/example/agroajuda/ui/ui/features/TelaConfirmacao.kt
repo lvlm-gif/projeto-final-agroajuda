@@ -17,15 +17,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.agroajuda.ui.ui.theme.GreenDark
+import com.example.agroajuda.ui.ui.theme.GreenLight
+import com.example.agroajuda.ui.ui.theme.GreenPrimary
+import com.example.agroajuda.ui.ui.theme.WhiteWarm
 
 @Composable
-fun TelaConfirmacao() {
+fun TelaConfirmacao(
+    onBackClick: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFDFCF9)) // Fundo levemente aquecido
+            .background(WhiteWarm)
     ) {
-        // Ilustração Rural na base
+        // Ilustração Rural na base (Paisagem suave)
         RuralLandscape(modifier = Modifier.align(Alignment.BottomCenter))
 
         Column(
@@ -37,16 +43,16 @@ fun TelaConfirmacao() {
         ) {
             // Ícone de Sucesso
             Surface(
-                modifier = Modifier.size(120.dp),
+                modifier = Modifier.size(100.dp),
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.secondaryContainer
+                color = GreenPrimary.copy(alpha = 0.1f)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Default.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.tertiary // Verde escuro
+                        contentDescription = "Sucesso",
+                        modifier = Modifier.size(56.dp),
+                        tint = GreenPrimary
                     )
                 }
             }
@@ -55,13 +61,10 @@ fun TelaConfirmacao() {
 
             // Mensagem Principal
             Text(
-                text = "Solicitação enviada com sucesso!",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    lineHeight = 32.sp
-                ),
-                color = MaterialTheme.colorScheme.tertiary,
+                text = "Solicitação enviada!",
+                color = GreenDark,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 28.sp,
                 textAlign = TextAlign.Center
             )
 
@@ -69,36 +72,38 @@ fun TelaConfirmacao() {
 
             // Mensagem Complementar
             Text(
-                text = "Em breve o profissional entrará em contato com você.",
-                style = MaterialTheme.typography.bodyLarge,
+                text = "O profissional recebeu seu pedido e\nentrará em contato em breve.",
                 color = Color.DarkGray,
-                textAlign = TextAlign.Center
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
 
             Spacer(modifier = Modifier.height(48.dp))
 
             // Botão de Retorno
             Button(
-                onClick = { /* Sem ação funcional conforme solicitado */ },
+                onClick = onBackClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(52.dp)
+                    .padding(horizontal = 24.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = GreenPrimary,
                     contentColor = Color.White
-                ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                )
             ) {
                 Text(
                     text = "Voltar para o início",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 )
             }
             
-            // Espaço para não sobrepor a paisagem em telas muito pequenas
-            Spacer(modifier = Modifier.height(100.dp))
+            // Espaço para a paisagem não ser coberta
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }
@@ -108,29 +113,28 @@ fun RuralLandscape(modifier: Modifier = Modifier) {
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(180.dp)
     ) {
         val width = size.width
         val height = size.height
 
-        // Colina posterior (verde mais claro)
+        // Colinas decorativas suaves (seguindo o estilo da Tela Principal)
         val path1 = Path().apply {
             moveTo(0f, height)
-            quadraticTo(width * 0.3f, height * 0.4f, width * 0.7f, height * 0.7f)
-            quadraticTo(width * 0.85f, height * 0.85f, width, height * 0.6f)
+            quadraticTo(width * 0.3f, height * 0.4f, width * 0.6f, height * 0.7f)
+            quadraticTo(width * 0.8f, height * 0.9f, width, height * 0.6f)
             lineTo(width, height)
             close()
         }
-        drawPath(path1, color = Color(0xFFC8E6C9))
+        drawPath(path1, color = GreenLight.copy(alpha = 0.2f))
 
-        // Colina frontal (verde médio)
         val path2 = Path().apply {
             moveTo(0f, height)
-            quadraticTo(width * 0.2f, height * 0.8f, width * 0.5f, height * 0.5f)
-            quadraticTo(width * 0.8f, height * 0.2f, width, height * 0.9f)
+            quadraticTo(width * 0.2f, height * 0.8f, width * 0.5f, height * 0.6f)
+            quadraticTo(width * 0.8f, height * 0.4f, width, height * 0.85f)
             lineTo(width, height)
             close()
         }
-        drawPath(path2, color = Color(0xFFA5D6A7))
+        drawPath(path2, color = GreenLight.copy(alpha = 0.3f))
     }
 }

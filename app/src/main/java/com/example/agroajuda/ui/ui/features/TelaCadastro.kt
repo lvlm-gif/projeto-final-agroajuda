@@ -15,16 +15,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.agroajuda.ui.ui.theme.GreenDark
+import com.example.agroajuda.ui.ui.theme.GreenPrimary
+import com.example.agroajuda.ui.ui.theme.WhiteWarm
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TelaCadastro() {
-    // Mantemos estados básicos apenas para permitir a interação visual na tela
+fun TelaCadastro(
+    onBackClick: () -> Unit = {}
+) {
+    // Estados para os campos
     var nome by remember { mutableStateOf("") }
     var telefone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var tipo by remember { mutableStateOf("Agrônomo") }
+    var tipoUsuario by remember { mutableStateOf("Agrônomo") }
     var especializacao by remember { mutableStateOf("") }
+    
+    // Estados para feedback (mensagens de erro ou sucesso)
+    var mensagemFeedback by remember { mutableStateOf("") }
+    var isErro by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -33,137 +42,167 @@ fun TelaCadastro() {
                     Text(
                         text = "Criar cadastro",
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleLarge
+                        color = GreenDark,
+                        fontSize = 20.sp
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Sem ação funcional conforme solicitado */ }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
-                            tint = MaterialTheme.colorScheme.onBackground
+                            tint = GreenDark
                         )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = Color.Transparent
                 )
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = WhiteWarm
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            
             // Campo Nome
-            CustomLabel("Nome")
-            CustomTextField(
+            CadastroLabel("Nome")
+            CadastroTextField(
                 value = nome,
-                onValueChange = { nome = it },
+                onValueChange = { 
+                    nome = it
+                    mensagemFeedback = "" // Limpa a mensagem ao digitar
+                },
                 placeholder = "Digite seu nome completo"
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Campo Telefone
-            CustomLabel("Telefone")
-            CustomTextField(
+            CadastroLabel("Telefone")
+            CadastroTextField(
                 value = telefone,
-                onValueChange = { telefone = it },
+                onValueChange = { 
+                    telefone = it
+                    mensagemFeedback = ""
+                },
                 placeholder = "(XX) XXXXX-XXXX"
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Campo E-mail
-            CustomLabel("E-mail")
-            CustomTextField(
+            CadastroLabel("E-mail")
+            CadastroTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { 
+                    email = it
+                    mensagemFeedback = ""
+                },
                 placeholder = "seu@email.com"
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Tipo de Usuário
-            CustomLabel("Tipo de usuário")
+            // Tipo de usuário
+            CadastroLabel("Tipo de usuário")
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(vertical = 4.dp)
             ) {
                 RadioButton(
-                    selected = tipo == "Agrônomo",
-                    onClick = { tipo = "Agrônomo" },
-                    colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary)
+                    selected = tipoUsuario == "Agrônomo",
+                    onClick = { tipoUsuario = "Agrônomo" },
+                    colors = RadioButtonDefaults.colors(selectedColor = GreenPrimary)
                 )
-                Text("Agrônomo", style = MaterialTheme.typography.bodyLarge)
-                
-                Spacer(modifier = Modifier.width(24.dp))
-                
+                Text(text = "Agrônomo", color = Color.Black, fontSize = 16.sp)
+
+                Spacer(modifier = Modifier.width(20.dp))
+
                 RadioButton(
-                    selected = tipo == "Técnico Agrícola",
-                    onClick = { tipo = "Técnico Agrícola" },
-                    colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colorScheme.primary)
+                    selected = tipoUsuario == "Técnico Agrícola",
+                    onClick = { tipoUsuario = "Técnico Agrícola" },
+                    colors = RadioButtonDefaults.colors(selectedColor = GreenPrimary)
                 )
-                Text("Técnico Agrícola", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Técnico Agrícola", color = Color.Black, fontSize = 16.sp)
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Campo Especialização
-            CustomLabel("Especialização")
-            CustomTextField(
+            CadastroLabel("Especialização")
+            CadastroTextField(
                 value = especializacao,
-                onValueChange = { especializacao = it },
+                onValueChange = { 
+                    especializacao = it
+                    mensagemFeedback = ""
+                },
                 placeholder = "Ex.: Solo e adubação"
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(24.dp))
+            
+            // Exibição da mensagem de feedback
+            if (mensagemFeedback.isNotEmpty()) {
+                Text(
+                    text = mensagemFeedback,
+                    color = if (isErro) Color.Red else GreenPrimary,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
 
             // Botão Cadastrar
             Button(
-                onClick = { /* Sem ação funcional conforme solicitado */ },
+                onClick = {
+                    if (nome.isBlank() || telefone.isBlank() || email.isBlank() || especializacao.isBlank()) {
+                        mensagemFeedback = "Preencha todos os campos obrigatórios."
+                        isErro = true
+                    } else {
+                        mensagemFeedback = "Cadastro concluído!"
+                        isErro = false
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(52.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
+                    containerColor = GreenPrimary,
                     contentColor = Color.White
-                ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                )
             ) {
                 Text(
                     text = "Cadastrar",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 )
             }
             
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
 
 @Composable
-fun CustomLabel(text: String) {
+fun CadastroLabel(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 8.dp),
-        color = MaterialTheme.colorScheme.onBackground
+        color = Color.Black,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        modifier = Modifier.padding(bottom = 8.dp)
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTextField(
+fun CadastroTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String
@@ -173,18 +212,15 @@ fun CustomTextField(
         onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
-        placeholder = { 
-            Text(
-                text = placeholder,
-                color = Color.Gray.copy(alpha = 0.5f)
-            ) 
+            .background(Color.White, RoundedCornerShape(10.dp)),
+        placeholder = {
+            Text(text = placeholder, color = Color.Gray)
         },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(10.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = Color.LightGray.copy(alpha = 0.6f),
-            cursorColor = MaterialTheme.colorScheme.primary
+            unfocusedBorderColor = Color.LightGray.copy(alpha = 0.5f),
+            focusedBorderColor = GreenPrimary,
+            cursorColor = GreenPrimary
         ),
         singleLine = true
     )

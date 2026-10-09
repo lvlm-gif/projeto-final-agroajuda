@@ -1,4 +1,3 @@
-
 package com.example.agroajuda.ui.ui.navigation
 
 import androidx.compose.runtime.Composable
@@ -30,19 +29,32 @@ fun NavGraph() {
         }
 
         composable(NavTarget.Cadastro.route) {
-            TelaCadastro()
+            TelaCadastro(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(NavTarget.Detalhes.route) {
             TelaDetalhes(
                 onSolicitarClick = {
                     navController.navigate(NavTarget.Confirmacao.route)
+                },
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }
 
         composable(NavTarget.Confirmacao.route) {
-            TelaConfirmacao()
+            TelaConfirmacao(
+                onBackClick = {
+                    navController.navigate(NavTarget.Home.route) {
+                        popUpTo(NavTarget.Home.route) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
