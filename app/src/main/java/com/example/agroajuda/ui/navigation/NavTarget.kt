@@ -1,4 +1,4 @@
-package com.example.agroajuda.ui.ui.navigation
+package com.example.agroajuda.ui.navigation
 
 sealed class NavTarget(val route: String) {
 

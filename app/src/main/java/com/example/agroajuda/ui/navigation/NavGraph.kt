@@ -1,4 +1,4 @@
-package com.example.agroajuda.ui.ui.navigation
+package com.example.agroajuda.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
