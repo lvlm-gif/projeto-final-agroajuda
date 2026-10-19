@@ -15,13 +15,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
 import com.example.agroajuda.ui.ui.theme.WhiteWarm
+import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaCadastro(
+    viewModel: ProfissionalViewModel,
     onBackClick: () -> Unit = {}
 ) {
     // Estados para os campos
@@ -165,8 +168,16 @@ fun TelaCadastro(
                         mensagemFeedback = "Preencha todos os campos obrigatórios."
                         isErro = true
                     } else {
-                        mensagemFeedback = "Cadastro concluído!"
-                        isErro = false
+                        val novoProfissional = Profissional(
+                            nome = nome,
+                            telefone = telefone,
+                            tipo = tipoUsuario,
+                            especialidade = especializacao,
+                            descricao = "E-mail: $email"
+                        )
+                        viewModel.insert(novoProfissional) {
+                            onBackClick()
+                        }
                     }
                 },
                 modifier = Modifier

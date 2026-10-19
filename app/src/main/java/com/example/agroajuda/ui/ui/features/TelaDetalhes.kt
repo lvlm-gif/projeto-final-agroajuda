@@ -19,6 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenLight
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
@@ -27,21 +30,30 @@ import com.example.agroajuda.ui.ui.theme.WhiteWarm
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaDetalhes(
+    profissional: Profissional?,
     onSolicitarClick: () -> Unit,
     onBackClick: () -> Unit = {}
 ) {
-    // Dados simulados para a interface conforme solicitado no PRD
-    val nomeProfissional = "Ana Souza"
-    val tipoProfissional = "Agrônoma"
-    val especialidade = "Cultivo de Grãos"
-    val descricao = "Profissional com 10 anos de experiência em assistência técnica rural, especialista em manejo de solo e grandes culturas. Atua principalmente na região Nordeste auxiliando pequenos produtores com foco em sustentabilidade e produtividade."
+    // Caso o profissional não seja encontrado (ex: ID inválido), exibe mensagem de erro.
+    if (profissional == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Profissional não encontrado", color = GreenDark, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = onBackClick) {
+                    Text("Voltar")
+                }
+            }
+        }
+        return
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = nomeProfissional,
+                        text = profissional.nome,
                         color = GreenDark,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -93,14 +105,14 @@ fun TelaDetalhes(
             // Informações do Profissional
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
-                    text = tipoProfissional,
+                    text = profissional.tipo,
                     color = GreenPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
                 
                 Text(
-                    text = especialidade,
+                    text = profissional.especialidade,
                     color = GreenDark,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 24.sp
@@ -119,7 +131,7 @@ fun TelaDetalhes(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = descricao,
+                    text = profissional.descricao.ifBlank { "Sem descrição disponível." },
                     color = Color.DarkGray,
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
@@ -149,7 +161,7 @@ fun TelaDetalhes(
                                 fontSize = 14.sp
                             )
                             Text(
-                                text = "(81) 99999-9999",
+                                text = profissional.telefone,
                                 color = GreenDark,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp

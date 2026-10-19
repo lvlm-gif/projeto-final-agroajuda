@@ -27,24 +27,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.example.agroajuda.R
 import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenLight
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
 import com.example.agroajuda.ui.ui.theme.WhiteWarm
+import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 
 @Composable
 fun TelaPrincipal(
+    viewModel: ProfissionalViewModel,
     onCadastrarClick: () -> Unit,
-    onProfissionalClick: () -> Unit
+    onProfissionalClick: (Int) -> Unit
 ) {
-    // Lista de profissionais contendo exatamente três cartões conforme o prompt
-    val profissionais = listOf(
-        Profissional(1, "Ana Souza", "Agrônoma", "Cultivo de Grãos", "81999999999"),
-        Profissional(2, "Carlos Lima", "Técnico Agrícola", "Irrigação", "81888888888"),
-        Profissional(3, "Mariana Alves", "Agrônoma", "Controle de Pragas", "81777777777")
-    )
+    val profissionais by viewModel.allProfissionais.collectAsState()
 
     Box(
         modifier = Modifier
@@ -151,7 +150,7 @@ fun TelaPrincipal(
 
                     // Três cartões empilhados verticalmente
                     profissionais.forEach { profissional ->
-                        ItemProfissional(profissional, onProfissionalClick)
+                        ItemProfissional(profissional) { onProfissionalClick(profissional.id) }
                         Spacer(modifier = Modifier.height(12.dp))
                     }
                 }

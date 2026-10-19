@@ -13,6 +13,9 @@ interface ProfissionalDao {
     @Query("SELECT * FROM profissionais")
     fun getAllProfissionais(): Flow<List<Profissional>>
 
+    @Query("SELECT * FROM profissionais WHERE id = :id")
+    fun getProfissionalById(id: Int): Flow<Profissional?>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProfissional(profissional: Profissional)
 }

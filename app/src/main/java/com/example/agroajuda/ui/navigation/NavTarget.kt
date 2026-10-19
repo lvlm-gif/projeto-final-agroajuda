@@ -6,7 +6,9 @@ sealed class NavTarget(val route: String) {
 
     data object Cadastro : NavTarget("cadastro")
 
-    data object Detalhes : NavTarget("detalhes")
+    data object Detalhes : NavTarget("detalhes/{profissionalId}") {
+        fun createRoute(profissionalId: Int) = "detalhes/$profissionalId"
+    }
 
     data object Confirmacao : NavTarget("confirmacao")
 }

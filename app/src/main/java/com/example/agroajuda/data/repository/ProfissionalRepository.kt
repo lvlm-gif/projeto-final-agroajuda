@@ -8,6 +8,10 @@ class ProfissionalRepository(private val profissionalDao: ProfissionalDao) {
 
     val allProfissionais: Flow<List<Profissional>> = profissionalDao.getAllProfissionais()
 
+    fun getProfissionalById(id: Int): Flow<Profissional?> {
+        return profissionalDao.getProfissionalById(id)
+    }
+
     suspend fun insert(profissional: Profissional) {
         profissionalDao.insertProfissional(profissional)
     }
