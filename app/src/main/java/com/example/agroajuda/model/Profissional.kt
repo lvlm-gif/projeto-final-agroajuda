@@ -11,5 +11,6 @@ data class Profissional(
     val tipo: String,
     val especialidade: String,
     val telefone: String,
-    val descricao: String = ""
+    val descricao: String = "",
+    val fotoUri: String? = null
 )

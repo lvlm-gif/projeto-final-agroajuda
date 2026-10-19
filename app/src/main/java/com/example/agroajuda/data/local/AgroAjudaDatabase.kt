@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.agroajuda.data.local.dao.ProfissionalDao
 import com.example.agroajuda.model.Profissional
 
-@Database(entities = [Profissional::class], version = 1, exportSchema = false)
+@Database(entities = [Profissional::class], version = 2, exportSchema = false)
 abstract class AgroAjudaDatabase : RoomDatabase() {
 
     abstract fun profissionalDao(): ProfissionalDao
@@ -22,7 +22,9 @@ abstract class AgroAjudaDatabase : RoomDatabase() {
                     context.applicationContext,
                     AgroAjudaDatabase::class.java,
                     "agroajuda_database"
-                ).build()
+                )
+                .fallbackToDestructiveMigration() // Adicionado para lidar com a mudança de esquema (versão 1 -> 2)
+                .build()
                 INSTANCE = instance
                 instance
             }
