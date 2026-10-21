@@ -71,7 +71,7 @@ fun TelaPrincipal(
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = R.drawable.logo_agroajuda),
                     contentDescription = "Logo AgroAjuda",
                     modifier = Modifier.size(70.dp)
                 )
