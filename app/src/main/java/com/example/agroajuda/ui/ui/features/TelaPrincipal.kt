@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,8 @@ import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 fun TelaPrincipal(
     viewModel: ProfissionalViewModel,
     onCadastrarClick: () -> Unit,
-    onProfissionalClick: (Int) -> Unit
+    onProfissionalClick: (Int) -> Unit,
+    onStatusClick: () -> Unit = {}
 ) {
     val profissionais by viewModel.allProfissionais.collectAsState()
 
@@ -155,6 +157,21 @@ fun TelaPrincipal(
                     }
                 }
             }
+        }
+
+        // MUDANÇA: Botão de Status movido para o final do Box para ficar no topo da hierarquia visual
+        // Isso garante que ele receba os eventos de clique.
+        IconButton(
+            onClick = onStatusClick,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp, end = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "Ver status das solicitações",
+                tint = GreenDark
+            )
         }
     }
 }

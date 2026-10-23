@@ -11,4 +11,6 @@ sealed class NavTarget(val route: String) {
     }
 
     data object Confirmacao : NavTarget("confirmacao")
+
+    data object StatusSolicitacao : NavTarget("status_solicitacao")
 }

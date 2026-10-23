@@ -17,6 +17,7 @@ import com.example.agroajuda.ui.ui.features.TelaPrincipal
 import com.example.agroajuda.ui.ui.features.TelaCadastro
 import com.example.agroajuda.ui.ui.features.TelaDetalhes
 import com.example.agroajuda.ui.ui.features.TelaConfirmacao
+import com.example.agroajuda.ui.ui.features.TelaStatusSolicitacao
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModelFactory
 
@@ -43,6 +44,9 @@ fun NavGraph() {
                 },
                 onProfissionalClick = { profissionalId ->
                     navController.navigate(NavTarget.Detalhes.createRoute(profissionalId))
+                },
+                onStatusClick = {
+                    navController.navigate(NavTarget.StatusSolicitacao.route)
                 }
             )
         }
@@ -77,6 +81,19 @@ fun NavGraph() {
         composable(NavTarget.Confirmacao.route) {
             TelaConfirmacao(
                 onBackClick = {
+                    navController.navigate(NavTarget.Home.route) {
+                        popUpTo(NavTarget.Home.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(NavTarget.StatusSolicitacao.route) {
+            TelaStatusSolicitacao(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onHomeClick = {
                     navController.navigate(NavTarget.Home.route) {
                         popUpTo(NavTarget.Home.route) { inclusive = true }
                     }
