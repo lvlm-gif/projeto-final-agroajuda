@@ -12,21 +12,34 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.agroajuda.data.local.AgroAjudaDatabase
 import com.example.agroajuda.data.repository.ProfissionalRepository
+import com.example.agroajuda.data.repository.SolicitacaoRepository
+import com.example.agroajuda.model.Solicitacao
 import com.example.agroajuda.ui.ui.features.TelaPrincipal
 import com.example.agroajuda.ui.ui.features.TelaCadastro
 import com.example.agroajuda.ui.ui.features.TelaDetalhes
 import com.example.agroajuda.ui.ui.features.TelaConfirmacao
+import com.example.agroajuda.ui.ui.features.TelaStatusSolicitacao
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModelFactory
+import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModel
+import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
     val context = LocalContext.current
     val database = AgroAjudaDatabase.getDatabase(context)
-    val repository = ProfissionalRepository(database.profissionalDao())
-    val factory = ProfissionalViewModelFactory(repository)
-    val profissionalViewModel: ProfissionalViewModel = viewModel(factory = factory)
+    
+    val profissionalRepository = ProfissionalRepository(database.profissionalDao())
+    val profissionalFactory = ProfissionalViewModelFactory(profissionalRepository)
+    val profissionalViewModel: ProfissionalViewModel = viewModel(factory = profissionalFactory)
+
+    val solicitacaoRepository = SolicitacaoRepository(database.solicitacaoDao())
+    val solicitacaoFactory = SolicitacaoViewModelFactory(solicitacaoRepository)
+    val solicitacaoViewModel: SolicitacaoViewModel = viewModel(factory = solicitacaoFactory)
 
     NavHost(
         navController = navController,
@@ -40,6 +53,9 @@ fun NavGraph() {
                 },
                 onProfissionalClick = { profissionalId ->
                     navController.navigate(NavTarget.Detalhes.createRoute(profissionalId))
+                },
+                onStatusClick = {
+                    navController.navigate(NavTarget.StatusSolicitacao.route)
                 }
             )
         }
@@ -63,7 +79,15 @@ fun NavGraph() {
             TelaDetalhes(
                 profissional = profissional,
                 onSolicitarClick = {
-                    navController.navigate(NavTarget.Confirmacao.route)
+                    val dataAtual = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                    val novaSolicitacao = Solicitacao(
+                        profissionalId = profissionalId,
+                        status = "Aguardando resposta",
+                        data = dataAtual
+                    )
+                    solicitacaoViewModel.insert(novaSolicitacao) {
+                        navController.navigate(NavTarget.Confirmacao.route)
+                    }
                 },
                 onBackClick = {
                     navController.popBackStack()
@@ -74,6 +98,21 @@ fun NavGraph() {
         composable(NavTarget.Confirmacao.route) {
             TelaConfirmacao(
                 onBackClick = {
+                    navController.navigate(NavTarget.Home.route) {
+                        popUpTo(NavTarget.Home.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(NavTarget.StatusSolicitacao.route) {
+            TelaStatusSolicitacao(
+                solicitacaoViewModel = solicitacaoViewModel,
+                profissionalViewModel = profissionalViewModel,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onHomeClick = {
                     navController.navigate(NavTarget.Home.route) {
                         popUpTo(NavTarget.Home.route) { inclusive = true }
                     }

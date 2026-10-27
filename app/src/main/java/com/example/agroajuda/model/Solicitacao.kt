@@ -8,6 +8,7 @@ data class Solicitacao(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val profissionalId: Int,
+    val clienteId: Int = 0,
     val status: String,
     val data: String
 )

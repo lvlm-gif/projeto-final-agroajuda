@@ -10,32 +10,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
-// Modelo local para dados fictícios
-data class SolicitacaoFicticia(
-    val id: String,
-    val profissional: String,
-    val atendimento: String,
-    val data: String,
-    val status: String,
-    val etapaAtual: Int // 1 a 4
-)
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.example.agroajuda.model.Solicitacao
+import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
+import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModel
 
 @Composable
 fun TelaStatusSolicitacao(
+    solicitacaoViewModel: SolicitacaoViewModel,
+    profissionalViewModel: ProfissionalViewModel,
     onBackClick: () -> Unit,
     onHomeClick: () -> Unit
 ) {
-    // Dados fictícios para visualização funcional
-    val listaSolicitacoes = remember {
-        listOf(
-            SolicitacaoFicticia("#2026-0042", "Ana Souza", "Cultivo de Grãos", "19/10/2026", "Aguardando resposta", 2),
-            SolicitacaoFicticia("#2026-0038", "Carlos Lima", "Irrigação", "15/10/2026", "Aceita", 3),
-            SolicitacaoFicticia("#2026-0021", "Mariana Alves", "Controle de Pragas", "10/10/2026", "Concluída", 4)
-        )
-    }
-
-    var solicitacaoSelecionada by remember { mutableStateOf<SolicitacaoFicticia?>(null) }
+    val listaSolicitacoes by solicitacaoViewModel.allSolicitacoes.collectAsState()
+    var solicitacaoSelecionada by remember { mutableStateOf<Solicitacao?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         // Cabeçalho básico e funcional
@@ -55,17 +44,19 @@ fun TelaStatusSolicitacao(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (solicitacaoSelecionada == null) {
-            // LISTAGEM CRUA
+            // LISTAGEM REAL
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(listaSolicitacoes) { item ->
+                    val profissional by profissionalViewModel.getProfissionalById(item.profissionalId).collectAsState(initial = null)
+                    
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { solicitacaoSelecionada = item }
                             .padding(vertical = 8.dp)
                     ) {
-                        Text("Identificador: ${item.id}")
-                        Text("Profissional: ${item.profissional}")
+                        Text("Identificador: #${item.id}")
+                        Text("Profissional: ${profissional?.nome ?: "Carregando..."}")
                         Text("Data: ${item.data}")
                         Text("Status: ${item.status}")
                     }
@@ -75,14 +66,24 @@ fun TelaStatusSolicitacao(
         } else {
             // DETALHES BÁSICOS
             val sel = solicitacaoSelecionada!!
+            val profissional by profissionalViewModel.getProfissionalById(sel.profissionalId).collectAsState(initial = null)
+            
+            // Lógica de etapa baseada no status
+            val etapaAtual = when (sel.status) {
+                "Aguardando resposta" -> 2
+                "Aceita" -> 3
+                "Concluída" -> 4
+                else -> 1
+            }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                Text("ID: ${sel.id}")
-                Text("Profissional solicitado: ${sel.profissional}")
-                Text("Serviço: ${sel.atendimento}")
+                Text("ID: #${sel.id}")
+                Text("Profissional solicitado: ${profissional?.nome ?: "Carregando..."}")
+                Text("Serviço: ${profissional?.tipo ?: "Assistência Técnica"}")
                 Text("Data da solicitação: ${sel.data}")
                 Text("Situação atual: ${sel.status}")
 
@@ -90,11 +91,29 @@ fun TelaStatusSolicitacao(
                 
                 Text("Etapas do processo:", style = MaterialTheme.typography.titleMedium)
                 Text("- 1. Solicitação enviada: OK")
-                Text("- 2. Aguardando resposta: " + if (sel.etapaAtual == 2) "[ATUAL]" else if (sel.etapaAtual > 2) "OK" else "Pendente")
-                Text("- 3. Solicitação aceita: " + if (sel.etapaAtual == 3) "[ATUAL]" else if (sel.etapaAtual > 3) "OK" else "Pendente")
-                Text("- 4. Atendimento concluído: " + if (sel.etapaAtual == 4) "[ATUAL]" else "Pendente")
+                Text("- 2. Aguardando resposta: " + if (etapaAtual == 2) "[ATUAL]" else if (etapaAtual > 2) "OK" else "Pendente")
+                Text("- 3. Solicitação aceita: " + if (etapaAtual == 3) "[ATUAL]" else if (etapaAtual > 3) "OK" else "Pendente")
+                Text("- 4. Atendimento concluído: " + if (etapaAtual == 4) "[ATUAL]" else "Pendente")
 
                 Spacer(modifier = Modifier.height(32.dp))
+
+                if (etapaAtual < 4) {
+                    Button(
+                        onClick = {
+                            val nextStatus = when (etapaAtual) {
+                                2 -> "Aceita"
+                                3 -> "Concluída"
+                                else -> sel.status
+                            }
+                            solicitacaoViewModel.updateStatus(sel.id, nextStatus)
+                            solicitacaoSelecionada = sel.copy(status = nextStatus)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (etapaAtual == 2) "Simular Aceite" else "Simular Conclusão")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 
                 Button(onClick = onHomeClick, modifier = Modifier.fillMaxWidth()) {
                     Text("Retornar à Tela Inicial")

@@ -42,4 +42,11 @@ class SolicitacaoRepository(private val solicitacaoDao: SolicitacaoDao) {
     suspend fun deleteById(id: Int) {
         solicitacaoDao.deleteSolicitacaoById(id)
     }
+
+    /**
+     * Atualiza apenas o status de uma solicitação.
+     */
+    suspend fun updateStatus(id: Int, novoStatus: String) {
+        solicitacaoDao.updateStatus(id, novoStatus)
+    }
 }

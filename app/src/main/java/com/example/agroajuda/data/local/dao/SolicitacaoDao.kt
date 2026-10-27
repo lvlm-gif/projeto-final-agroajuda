@@ -24,4 +24,7 @@ interface SolicitacaoDao {
 
     @Query("DELETE FROM solicitacoes WHERE id = :id")
     suspend fun deleteSolicitacaoById(id: Int)
+
+    @Query("UPDATE solicitacoes SET status = :status WHERE id = :id")
+    suspend fun updateStatus(id: Int, status: String)
 }

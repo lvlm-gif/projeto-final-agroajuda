@@ -60,10 +60,14 @@ class SolicitacaoViewModel(private val repository: SolicitacaoRepository) : View
      * @param id O identificador da solicitação a ser removida.
      * @param onComplete Callback executado após a conclusão da operação.
      */
-    fun delete(id: Int, onComplete: () -> Unit = {}) {
+    /**
+     * Atualiza o status de uma solicitação.
+     * @param id O identificador da solicitação.
+     * @param novoStatus O novo status a ser definido.
+     */
+    fun updateStatus(id: Int, novoStatus: String) {
         viewModelScope.launch {
-            repository.deleteById(id)
-            onComplete()
+            repository.updateStatus(id, novoStatus)
         }
     }
 }
