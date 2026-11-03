@@ -21,72 +21,107 @@ fun TelaCadastroCliente(
     var descricao by remember { mutableStateOf("") }
     var mensagemErro by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.Start
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
-        Text(text = "Cadastro de Cliente", fontSize = 24.sp, color = Color.Black)
-        
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(text = "Nome", color = Color.Black)
-        OutlinedTextField(
-            value = nome,
-            onValueChange = { nome = it; mensagemErro = "" },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Digite seu nome") }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "Telefone", color = Color.Black)
-        OutlinedTextField(
-            value = telefone,
-            onValueChange = { telefone = it; mensagemErro = "" },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Digite seu telefone") }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "E-mail", color = Color.Black)
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it; mensagemErro = "" },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Digite seu e-mail") }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(text = "Descrição", color = Color.Black)
-        OutlinedTextField(
-            value = descricao,
-            onValueChange = { descricao = it; mensagemErro = "" },
-            modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp),
-            placeholder = { Text("Digite uma descrição") }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        if (mensagemErro.isNotEmpty()) {
-            Text(text = mensagemErro, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
-        }
-
-        Button(
-            onClick = {
-                if (nome.isBlank() || telefone.isBlank() || email.isBlank() || descricao.isBlank()) {
-                    mensagemErro = "Preencha todos os campos obrigatórios."
-                } else {
-                    onCadastroFinalizado()
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.Start
         ) {
-            Text("Cadastrar")
+            Text(
+                text = "Cadastro de Cliente",
+                fontSize = 24.sp,
+                color = Color.Black
+            )
+            
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(text = "Nome", color = Color.Black)
+            OutlinedTextField(
+                value = nome,
+                onValueChange = { nome = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Digite seu nome completo") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Telefone", color = Color.Black)
+            OutlinedTextField(
+                value = telefone,
+                onValueChange = { telefone = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("(XX) XXXXX-XXXX") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "E-mail", color = Color.Black)
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("seu@email.com") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Descrição", color = Color.Black)
+            OutlinedTextField(
+                value = descricao,
+                onValueChange = { descricao = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth().heightIn(min = 100.dp),
+                placeholder = { Text("Descreva sua necessidade") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            if (mensagemErro.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = mensagemErro, color = Color.Red, fontSize = 14.sp)
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = {
+                    if (nome.isBlank() || telefone.isBlank() || email.isBlank() || descricao.isBlank()) {
+                        mensagemErro = "Preencha todos os campos obrigatórios."
+                    } else {
+                        onCadastroFinalizado()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+            ) {
+                Text("Cadastrar", color = Color.White)
+            }
         }
     }
 }
