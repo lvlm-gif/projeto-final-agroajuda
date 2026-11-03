@@ -14,11 +14,7 @@ import com.example.agroajuda.data.local.AgroAjudaDatabase
 import com.example.agroajuda.data.repository.ProfissionalRepository
 import com.example.agroajuda.data.repository.SolicitacaoRepository
 import com.example.agroajuda.model.Solicitacao
-import com.example.agroajuda.ui.ui.features.TelaPrincipal
-import com.example.agroajuda.ui.ui.features.TelaCadastro
-import com.example.agroajuda.ui.ui.features.TelaDetalhes
-import com.example.agroajuda.ui.ui.features.TelaConfirmacao
-import com.example.agroajuda.ui.ui.features.TelaStatusSolicitacao
+import com.example.agroajuda.ui.ui.features.*
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModelFactory
 import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModel
@@ -43,8 +39,21 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = NavTarget.Home.route
+        startDestination = NavTarget.Login.route
     ) {
+        composable(NavTarget.Login.route) {
+            TelaLogin(
+                onLoginClick = {
+                    navController.navigate(NavTarget.Home.route) {
+                        popUpTo(NavTarget.Login.route) { inclusive = true }
+                    }
+                },
+                onCadastroClick = {
+                    navController.navigate(NavTarget.CadastroCliente.route)
+                }
+            )
+        }
+
         composable(NavTarget.Home.route) {
             TelaPrincipal(
                 viewModel = profissionalViewModel,
@@ -69,6 +78,14 @@ fun NavGraph() {
             )
         }
 
+        composable(NavTarget.CadastroCliente.route) {
+            TelaCadastroCliente(
+                onCadastroFinalizado = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
         composable(
             route = NavTarget.Detalhes.route,
             arguments = listOf(navArgument("profissionalId") { type = NavType.IntType })
@@ -79,15 +96,7 @@ fun NavGraph() {
             TelaDetalhes(
                 profissional = profissional,
                 onSolicitarClick = {
-                    val dataAtual = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-                    val novaSolicitacao = Solicitacao(
-                        profissionalId = profissionalId,
-                        status = "Aguardando resposta",
-                        data = dataAtual
-                    )
-                    solicitacaoViewModel.insert(novaSolicitacao) {
-                        navController.navigate(NavTarget.Confirmacao.route)
-                    }
+                    navController.navigate(NavTarget.DescricaoSolicitacao.createRoute(profissionalId))
                 },
                 onBackClick = {
                     navController.popBackStack()
@@ -95,8 +104,37 @@ fun NavGraph() {
             )
         }
 
-        composable(NavTarget.Confirmacao.route) {
+        composable(
+            route = NavTarget.DescricaoSolicitacao.route,
+            arguments = listOf(navArgument("profissionalId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val profissionalId = backStackEntry.arguments?.getInt("profissionalId") ?: 0
+            
+            TelaDescricaoSolicitacao(
+                onEnviarClick = { descricao ->
+                    navController.navigate(NavTarget.Confirmacao.createRoute(profissionalId, descricao))
+                }
+            )
+        }
+
+        composable(
+            route = NavTarget.Confirmacao.route,
+            arguments = listOf(
+                navArgument("profissionalId") { type = NavType.IntType },
+                navArgument("descricao") { 
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = ""
+                }
+            )
+        ) { backStackEntry ->
+            val profissionalId = backStackEntry.arguments?.getInt("profissionalId") ?: 0
+            val descricao = backStackEntry.arguments?.getString("descricao") ?: ""
+            val profissional by profissionalViewModel.getProfissionalById(profissionalId).collectAsState(initial = null)
+            
             TelaConfirmacao(
+                profissional = profissional,
+                descricao = descricao,
                 onBackClick = {
                     navController.navigate(NavTarget.Home.route) {
                         popUpTo(NavTarget.Home.route) { inclusive = true }
@@ -107,8 +145,6 @@ fun NavGraph() {
 
         composable(NavTarget.StatusSolicitacao.route) {
             TelaStatusSolicitacao(
-                solicitacaoViewModel = solicitacaoViewModel,
-                profissionalViewModel = profissionalViewModel,
                 onBackClick = {
                     navController.popBackStack()
                 },

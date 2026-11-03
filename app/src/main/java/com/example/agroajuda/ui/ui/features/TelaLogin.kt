@@ -1,18 +1,13 @@
 package com.example.agroajuda.ui.ui.features
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.agroajuda.ui.ui.theme.GreenDark
-import com.example.agroajuda.ui.ui.theme.GreenPrimary
 
 @Composable
 fun TelaLogin(
@@ -21,74 +16,82 @@ fun TelaLogin(
 ) {
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
+    var mensagemErro by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.White
     ) {
-        // Identificação do App
-        Text(
-            text = "AgroAjuda",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = GreenDark
-        )
-        
-        Text(
-            text = "Bem-vindo de volta",
-            fontSize = 16.sp,
-            color = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.padding(bottom = 32.dp)
-        )
-
-        // Campo de E-mail
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("E-mail") },
-            placeholder = { Text("seu@email.com") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Campo de Senha
-        OutlinedTextField(
-            value = senha,
-            onValueChange = { senha = it },
-            label = { Text("Senha") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Botão Entrar
-        Button(
-            onClick = onLoginClick,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                .fillMaxSize()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Entrar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-        }
+            Text(text = "AgroAjuda", fontSize = 28.sp, color = Color.Black)
+            
+            Spacer(modifier = Modifier.height(32.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Opção para cadastro
-        TextButton(onClick = onCadastroClick) {
-            Text(
-                text = "Não tem uma conta? Cadastre-se",
-                color = GreenDark
+            Text(text = "E-mail", color = Color.Black)
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Digite seu e-mail") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(text = "Senha", color = Color.Black)
+            OutlinedTextField(
+                value = senha,
+                onValueChange = { senha = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Digite sua senha") },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            if (mensagemErro.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(text = mensagemErro, color = Color.Red, fontSize = 14.sp)
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = {
+                    if (email.isBlank() || senha.isBlank()) {
+                        mensagemErro = "Preencha todos os campos."
+                    } else {
+                        onLoginClick()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.DarkGray,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Entrar")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextButton(onClick = onCadastroClick) {
+                Text(text = "Não tem uma conta? Cadastre-se", color = Color.Black)
+            }
         }
     }
 }
