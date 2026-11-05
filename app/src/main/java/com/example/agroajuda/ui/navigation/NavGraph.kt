@@ -96,7 +96,6 @@ fun NavGraph() {
             TelaDetalhes(
                 profissional = profissional,
                 onSolicitarClick = {
-                    // Navega para a tela de descrição antes da confirmação
                     navController.navigate(NavTarget.DescricaoSolicitacao.createRoute(profissionalId))
                 },
                 onBackClick = {
@@ -113,7 +112,6 @@ fun NavGraph() {
             
             TelaDescricaoSolicitacao(
                 onEnviarClick = { descricao ->
-                    // Navega para confirmação levando o texto digitado
                     navController.navigate(NavTarget.Confirmacao.createRoute(profissionalId, descricao))
                 }
             )

@@ -1,11 +1,14 @@
 package com.example.agroajuda.ui.ui.features
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -16,6 +19,7 @@ fun TelaLogin(
 ) {
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
+    var senhaVisivel by remember { mutableStateOf(false) }
     var mensagemErro by remember { mutableStateOf("") }
 
     Surface(
@@ -55,6 +59,17 @@ fun TelaLogin(
                 onValueChange = { senha = it; mensagemErro = "" },
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text("Digite sua senha") },
+                visualTransformation = if (senhaVisivel) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    Text(
+                        text = if (senhaVisivel) "Ocultar" else "Mostrar",
+                        modifier = Modifier
+                            .clickable { senhaVisivel = !senhaVisivel }
+                            .padding(8.dp),
+                        fontSize = 12.sp,
+                        color = Color.DarkGray
+                    )
+                },
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
                     focusedContainerColor = Color.White,

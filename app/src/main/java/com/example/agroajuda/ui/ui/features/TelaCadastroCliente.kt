@@ -1,5 +1,6 @@
 package com.example.agroajuda.ui.ui.features
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -18,6 +21,8 @@ fun TelaCadastroCliente(
     var nome by remember { mutableStateOf("") }
     var telefone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var senha by remember { mutableStateOf("") }
+    var senhaVisivel by remember { mutableStateOf(false) }
     var descricao by remember { mutableStateOf("") }
     var mensagemErro by remember { mutableStateOf("") }
 
@@ -88,6 +93,33 @@ fun TelaCadastroCliente(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(text = "Senha", color = Color.Black)
+            OutlinedTextField(
+                value = senha,
+                onValueChange = { senha = it; mensagemErro = "" },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Crie sua senha") },
+                visualTransformation = if (senhaVisivel) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    Text(
+                        text = if (senhaVisivel) "Ocultar" else "Mostrar",
+                        modifier = Modifier
+                            .clickable { senhaVisivel = !senhaVisivel }
+                            .padding(8.dp),
+                        fontSize = 12.sp,
+                        color = Color.DarkGray
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
+                )
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(text = "Descrição", color = Color.Black)
             OutlinedTextField(
                 value = descricao,
@@ -111,16 +143,19 @@ fun TelaCadastroCliente(
 
             Button(
                 onClick = {
-                    if (nome.isBlank() || telefone.isBlank() || email.isBlank() || descricao.isBlank()) {
+                    if (nome.isBlank() || telefone.isBlank() || email.isBlank() || senha.isBlank() || descricao.isBlank()) {
                         mensagemErro = "Preencha todos os campos obrigatórios."
                     } else {
                         onCadastroFinalizado()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.DarkGray,
+                    contentColor = Color.White
+                )
             ) {
-                Text("Cadastrar", color = Color.White)
+                Text("Cadastrar")
             }
         }
     }
