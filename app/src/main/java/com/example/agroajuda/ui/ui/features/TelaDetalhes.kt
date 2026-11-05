@@ -1,7 +1,6 @@
 package com.example.agroajuda.ui.ui.features
 
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.compose.foundation.Image
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenLight
@@ -59,7 +59,7 @@ fun TelaDetalhes(
     val bitmap = remember(profissional.fotoUri) {
         profissional.fotoUri?.let { uriString ->
             try {
-                val uri = Uri.parse(uriString)
+                val uri = uriString.toUri()
                 if (Build.VERSION.SDK_INT < 28) {
                     @Suppress("DEPRECATION")
                     MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
@@ -67,7 +67,7 @@ fun TelaDetalhes(
                     val source = ImageDecoder.createSource(context.contentResolver, uri)
                     ImageDecoder.decodeBitmap(source)
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 null
             }
         }
@@ -143,7 +143,14 @@ fun TelaDetalhes(
                     fontSize = 16.sp
                 )
                 
-                // Removido o campo de especialidade/frase "Especialista Agro" conforme solicitado
+                if (profissional.especialidade.isNotBlank()) {
+                    Text(
+                        text = profissional.especialidade,
+                        color = GreenDark,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 24.sp
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -210,7 +217,7 @@ fun TelaDetalhes(
                 )
             ) {
                 Text(
-                    text = "Solicitar assistência",
+                    text = "Solicitar atendimento",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
