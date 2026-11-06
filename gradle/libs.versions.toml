@@ -13,6 +13,8 @@ navigationCompose = "2.8.9"
 room = "2.7.0-alpha11"
 retrofit = "2.11.0"
 ksp = "2.0.21-1.0.28"
+kotlinxCoroutinesTest = "1.10.1"
+mockk = "1.13.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,8 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

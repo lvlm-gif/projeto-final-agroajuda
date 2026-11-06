@@ -13,7 +13,7 @@ import com.example.agroajuda.model.Cliente
 import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.model.Solicitacao
 
-@Database(entities = [Profissional::class, Cliente::class, Solicitacao::class], version = 5, exportSchema = false)
+@Database(entities = [Profissional::class, Cliente::class, Solicitacao::class], version = 6, exportSchema = false)
 abstract class AgroAjudaDatabase : RoomDatabase() {
 
     abstract fun profissionalDao(): ProfissionalDao
@@ -48,6 +48,14 @@ abstract class AgroAjudaDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE `solicitacoes` ADD COLUMN `descricao` TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
+
         fun getDatabase(context: Context): AgroAjudaDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -55,7 +63,7 @@ abstract class AgroAjudaDatabase : RoomDatabase() {
                     AgroAjudaDatabase::class.java,
                     "agroajuda_database"
                 )
-                .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                 .build()
                 INSTANCE = instance
                 instance

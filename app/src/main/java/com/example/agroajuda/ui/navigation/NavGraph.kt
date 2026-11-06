@@ -23,6 +23,11 @@ import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModelFactory
 import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModel
 import com.example.agroajuda.ui.viewmodel.SolicitacaoViewModelFactory
+import com.example.agroajuda.data.repository.WeatherRepository
+import com.example.agroajuda.data.remote.RetrofitClient
+import com.example.agroajuda.ui.viewmodel.WeatherViewModel
+import com.example.agroajuda.ui.viewmodel.WeatherViewModelFactory
+import androidx.compose.runtime.LaunchedEffect
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -41,13 +46,18 @@ fun NavGraph() {
     val solicitacaoFactory = SolicitacaoViewModelFactory(solicitacaoRepository)
     val solicitacaoViewModel: SolicitacaoViewModel = viewModel(factory = solicitacaoFactory)
 
+    val weatherRepository = WeatherRepository(RetrofitClient.instance)
+    val weatherFactory = WeatherViewModelFactory(weatherRepository)
+    val weatherViewModel: WeatherViewModel = viewModel(factory = weatherFactory)
+
     NavHost(
         navController = navController,
         startDestination = NavTarget.Home.route
     ) {
         composable(NavTarget.Home.route) {
             TelaPrincipal(
-                viewModel = profissionalViewModel,
+                profissionalViewModel = profissionalViewModel,
+                weatherViewModel = weatherViewModel,
                 onCadastrarClick = {
                     navController.navigate(NavTarget.Cadastro.route)
                 },

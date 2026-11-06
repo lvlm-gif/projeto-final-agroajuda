@@ -37,15 +37,25 @@ import com.example.agroajuda.ui.ui.theme.GreenLight
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
 import com.example.agroajuda.ui.ui.theme.WhiteWarm
 import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
+import com.example.agroajuda.ui.viewmodel.WeatherViewModel
+import com.example.agroajuda.ui.viewmodel.WeatherUiState
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun TelaPrincipal(
-    viewModel: ProfissionalViewModel,
+    profissionalViewModel: ProfissionalViewModel,
+    weatherViewModel: WeatherViewModel,
     onCadastrarClick: () -> Unit,
     onProfissionalClick: (Int) -> Unit,
     onStatusClick: () -> Unit = {}
 ) {
-    val profissionais by viewModel.allProfissionais.collectAsState()
+    val profissionais by profissionalViewModel.allProfissionais.collectAsState()
+    val weatherState by weatherViewModel.uiState.collectAsState()
+
+    // Busca clima para uma coordenada agrícola (ex: Petrolina - PE)
+    LaunchedEffect(Unit) {
+        weatherViewModel.fetchWeather(-9.38, -40.50)
+    }
 
     Box(
         modifier = Modifier
@@ -148,6 +158,13 @@ fun TelaPrincipal(
                         fontSize = 20.sp
                     )
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Seção de Clima
+                    WeatherCard(weatherState) {
+                        weatherViewModel.fetchWeather(-9.38, -40.50)
+                    }
+
                     Spacer(modifier = Modifier.height(20.dp))
 
                     // Três cartões empilhados verticalmente
@@ -172,6 +189,95 @@ fun TelaPrincipal(
                 contentDescription = "Ver status das solicitações",
                 tint = GreenDark
             )
+        }
+    }
+}
+
+@Composable
+fun WeatherCard(state: WeatherUiState, onRetry: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = GreenLight.copy(alpha = 0.1f))
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = android.R.drawable.ic_menu_myplaces),
+                    contentDescription = null,
+                    tint = GreenPrimary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Clima em Petrolina, PE",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = GreenDark
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+
+            when (state) {
+                is WeatherUiState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp).align(Alignment.CenterHorizontally),
+                        color = GreenPrimary,
+                        strokeWidth = 2.dp
+                    )
+                }
+                is WeatherUiState.Success -> {
+                    val current = state.weather.current
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = "${current?.temperature ?: "--"}°C",
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = GreenDark
+                            )
+                            Text(
+                                text = "Temperatura Atual",
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                        
+                        val probChuva = state.weather.daily?.precipitationProbability?.firstOrNull() ?: 0
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(
+                                text = "$probChuva%",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = GreenPrimary
+                            )
+                            Text(
+                                text = "Prob. Chuva",
+                                fontSize = 12.sp,
+                                color = Color.Gray
+                            )
+                        }
+                    }
+                }
+                is WeatherUiState.Error -> {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Erro ao carregar clima",
+                            color = Color.Red,
+                            fontSize = 14.sp
+                        )
+                        TextButton(onClick = onRetry) {
+                            Text("Tentar novamente", color = GreenPrimary)
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -10,5 +10,6 @@ data class Solicitacao(
     val profissionalId: Int,
     val clienteId: Int = 0,
     val status: String,
-    val data: String
+    val data: String,
+    val descricao: String = ""
 )
