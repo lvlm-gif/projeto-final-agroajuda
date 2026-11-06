@@ -1,35 +1,46 @@
-# Relatório de Atividade: Implementação de Telas Cruas de Login e Cadastro de Cliente
+# Relatório de Atividade: Implementação de Telas de Login e Cadastro de Cliente (Estilo Cru)
 
 ## 1. Objetivo da Atividade
-Implementar as interfaces de Login e Cadastro de Cliente no projeto AgroAjuda, seguindo um padrão visual extremamente simples (cru) e configurando o fluxo de navegação inicial.
+Implementar as telas de Login e Cadastro de Cliente no aplicativo AgroAjuda, focando em uma interface básica, funcional e minimalista, além de configurar o fluxo de navegação inicial.
 
 ## 2. Escopo Solicitado
-Criação das telas de Login e Cadastro de Cliente utilizando componentes básicos do Jetpack Compose, com validação de campos obrigatórios e navegação funcional, respeitando a proibição de alterações no banco de dados.
+- Criação da Tela de Login como ponto de partida do app.
+- Criação da Tela de Cadastro de Cliente baseada no formulário de profissionais.
+- Implementação de validações simples de campos obrigatórios.
+- Configuração da navegação via Navigation Compose.
+- Manutenção da interface no estilo "cru" (fundo branco, sem decorações).
 
 ## 3. Arquivos Criados e Modificados
 
 | Arquivo | Caminho | Status |
 | :--- | :--- | :--- |
+| `TelaLogin.kt` | `app/src/main/java/com/example/agroajuda/ui/ui/features/` | Modificado |
+| `TelaCadastroCliente.kt` | `app/src/main/java/com/example/agroajuda/ui/ui/features/` | Criado |
+| `NavTarget.kt` | `app/src/main/java/com/example/agroajuda/ui/navigation/` | Modificado |
+| `NavGraph.kt` | `app/src/main/java/com/example/agroajuda/ui/navigation/` | Modificado |
 | `20261103-implementacao-login-cadastro-cliente.md` | `docs/prompts/` | Criado |
 | `20261103-implementacao-login-cadastro-cliente-output.md` | `docs/outputs/` | Criado |
-| `TelaCadastroCliente.kt` | `app/src/main/java/com/example/agroajuda/ui/ui/features/` | Criado |
-| `TelaLogin.kt` | `app/src/main/java/com/example/agroajuda/ui/ui/features/` | Modificado |
-| `NavGraph.kt` | `app/src/main/java/com/example/agroajuda/ui/navigation/` | Modificado |
 
 ## 4. Funcionalidades Implementadas
-- **Tela de Login**: Interface básica com fundo branco e textos pretos. Possui campos de e-mail e senha com validação de preenchimento.
-- **Tela de Cadastro de Cliente**: Formulário simplificado baseado na tela de profissionais, contendo os campos: Nome, Telefone, E-mail e Descrição.
-- **Validação de Campos**: Ambas as telas impedem o avanço do usuário caso existam campos vazios, exibindo uma mensagem simples de erro em vermelho.
-- **Navegação**:
-    - O Login foi definido como a tela inicial do aplicativo.
-    - O botão "Entrar" navega para a Home após validação.
-    - O link "Cadastre-se" leva à tela de Cadastro de Cliente.
-    - O botão "Cadastrar" na tela de cliente retorna o usuário para a tela de Login.
+- **Tela de Login**: Título, campos de e-mail e senha, botão de entrar e link para cadastro.
+- **Tela de Cadastro de Cliente**: Campos Nome, Telefone, E-mail, Senha (com opção de mostrar/ocultar) e Descrição.
+- **Validação**: Bloqueio de navegação e exibição de mensagem de erro ("Preencha todos os campos") caso algum campo obrigatório esteja vazio.
+- **Visualização de Senha**: Opção de texto "Mostrar/Ocultar" integrada aos campos de senha tanto no Login quanto no Cadastro.
 
-## 5. Testes Realizados
-- **Fluxo de Navegação**: Confirmado que o app inicia no Login e que todos os botões direcionam para as rotas corretas.
-- **Validação**: Testada a tentativa de entrada e cadastro com campos em branco, com sucesso na exibição da mensagem de erro e bloqueio de navegação.
-- **Compilação**: Projeto compilado com sucesso após correção de referências no `NavGraph.kt`.
+## 5. Navegação
+- **Start Destination**: Definido como `Login`.
+- **Fluxos**:
+    - Login -> Home (após preenchimento).
+    - Login -> Cadastro de Cliente.
+    - Cadastro de Cliente -> Login (ao finalizar).
 
-## 6. Confirmação de Banco de Dados
-**Nenhuma alteração foi realizada no banco de dados Room, entidades, DAOs ou repositórios.** A atividade foi estritamente limitada à camada de interface e navegação.
+## 6. Validações
+- Verificação de `isBlank()` em todos os campos de entrada antes de permitir a transição de tela.
+
+## 7. Testes Realizados
+- **Compilação**: Projeto compilado com sucesso (`BUILD SUCCESSFUL`).
+- **Navegação**: Fluxo de botões verificado através da análise do grafo de navegação.
+- **Estilo**: Validado que o design segue o padrão minimalista solicitado (fundo branco, botões cinzas, sem ilustrações).
+
+## 8. Confirmação de Banco de Dados
+**Nenhuma alteração foi realizada no banco de dados Room (Entidades, DAOs ou Repositórios).** Os dados de cadastro de cliente e login funcionam apenas como simulação visual e de fluxo, sem persistência permanente, respeitando o escopo de interface.

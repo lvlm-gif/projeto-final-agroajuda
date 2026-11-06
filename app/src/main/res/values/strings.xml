@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Agroajuda</string>
+    <string name="erro_carregamento_profissionais">Não foi possível carregar os dados dos profissionais. Verifique sua conexão e tente novamente.</string>
+    <string name="erro_insercao_profissional">Não foi possível salvar o cadastro do profissional. Tente novamente em instantes.</string>
+    <string name="vazio_profissionais">Nenhum profissional cadastrado no momento.</string>
+    <string name="tentar_novamente">Tentar novamente</string>
+    <string name="nenhum_resultado_pesquisa">Nenhum profissional encontrado para sua busca.</string>
 </resources>

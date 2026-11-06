@@ -11,9 +11,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,8 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import com.example.agroajuda.R
 import com.example.agroajuda.model.Profissional
+import com.example.agroajuda.ui.ui.UiState
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenLight
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
@@ -45,7 +49,8 @@ fun TelaPrincipal(
     onProfissionalClick: (Int) -> Unit,
     onStatusClick: () -> Unit = {}
 ) {
-    val profissionais by viewModel.allProfissionais.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -148,19 +153,117 @@ fun TelaPrincipal(
                         fontSize = 20.sp
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    // Três cartões empilhados verticalmente
-                    profissionais.forEach { profissional ->
-                        ItemProfissional(profissional) { onProfissionalClick(profissional.id) }
-                        Spacer(modifier = Modifier.height(12.dp))
+                    // Gerenciamento dos estados da interface através do UiState
+                    when (val state = uiState) {
+                        is UiState.Carregando -> {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 32.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(color = GreenPrimary)
+                            }
+                        }
+                        is UiState.Vazio -> {
+                            Text(
+                                text = stringResource(id = R.string.vazio_profissionais),
+                                color = Color.Gray,
+                                fontSize = 14.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        is UiState.Erro -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val mensagem = when (state.mensagem) {
+                                    "erro_carregamento_profissionais" -> stringResource(id = R.string.erro_carregamento_profissionais)
+                                    "erro_insercao_profissional" -> stringResource(id = R.string.erro_insercao_profissional)
+                                    else -> state.mensagem
+                                }
+                                Text(
+                                    text = mensagem,
+                                    color = Color.Red,
+                                    fontSize = 14.sp,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(
+                                    onClick = { viewModel.carregar() },
+                                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                                ) {
+                                    Text(text = stringResource(id = R.string.tentar_novamente))
+                                }
+                            }
+                        }
+                        is UiState.Sucesso -> {
+                            val profissionais = state.profissionais
+                            
+                            // Lógica de filtragem reativa integrada ao estado de Sucesso
+                            val filteredProfissionais = remember(profissionais, searchQuery) {
+                                profissionais.filter {
+                                    it.nome.contains(searchQuery, ignoreCase = true) ||
+                                    it.especialidade.contains(searchQuery, ignoreCase = true)
+                                }
+                            }
+
+                            // Barra de Pesquisa
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                modifier = Modifier.fillMaxWidth(),
+                                placeholder = { Text("Pesquisar por nome ou especialidade", fontSize = 14.sp) },
+                                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) },
+                                trailingIcon = {
+                                    if (searchQuery.isNotEmpty()) {
+                                        IconButton(onClick = { searchQuery = "" }) {
+                                            Icon(Icons.Default.Clear, contentDescription = "Limpar", tint = Color.Gray)
+                                        }
+                                    }
+                                },
+                                singleLine = true,
+                                shape = RoundedCornerShape(12.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = GreenPrimary,
+                                    unfocusedBorderColor = Color.LightGray,
+                                    focusedTextColor = Color.Black,
+                                    unfocusedTextColor = Color.Black
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            // Exibição da lista filtrada ou mensagem de nenhum resultado
+                            if (filteredProfissionais.isEmpty() && searchQuery.isNotEmpty()) {
+                                Text(
+                                    text = stringResource(id = R.string.nenhum_resultado_pesquisa),
+                                    color = Color.Gray,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                            filteredProfissionais.forEach { profissional ->
+                                ItemProfissional(profissional) { onProfissionalClick(profissional.id) }
+                                Spacer(modifier = Modifier.height(12.dp))
+                            }
+                        }
                     }
                 }
             }
         }
 
-        // MUDANÇA: Botão de Status movido para o final do Box para ficar no topo da hierarquia visual
-        // Isso garante que ele receba os eventos de clique.
+        // Botão de Status movido para o final do Box para ficar no topo da hierarquia visual
         IconButton(
             onClick = onStatusClick,
             modifier = Modifier
