@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.agroajuda.model.Profissional
 import com.example.agroajuda.ui.ui.theme.GreenDark
 import com.example.agroajuda.ui.ui.theme.GreenLight
 import com.example.agroajuda.ui.ui.theme.GreenPrimary
@@ -24,6 +25,8 @@ import com.example.agroajuda.ui.ui.theme.WhiteWarm
 
 @Composable
 fun TelaConfirmacao(
+    profissional: Profissional? = null,
+    descricao: String? = null,
     onBackClick: () -> Unit = {}
 ) {
     Box(
@@ -80,6 +83,38 @@ fun TelaConfirmacao(
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
 
+            // Exibição do profissional solicitado
+            if (profissional != null) {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "Profissional: ${profissional.nome}",
+                    color = GreenDark,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
+            }
+
+            // Exibição da descrição enviada
+            if (!descricao.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Sua mensagem:",
+                    color = GreenDark,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+                Text(
+                    text = descricao,
+                    color = Color.DarkGray,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(48.dp))
 
             // Botão de Retorno
@@ -87,8 +122,7 @@ fun TelaConfirmacao(
                 onClick = onBackClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
-                    .padding(horizontal = 24.dp),
+                    .height(52.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = GreenPrimary,
