@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Agroajuda</string>
+    <string name="ver_status_solicitacao">Ver status da solicitação</string>
 </resources>
