@@ -40,6 +40,7 @@ import com.example.agroajuda.ui.viewmodel.ProfissionalViewModel
 import com.example.agroajuda.ui.viewmodel.WeatherViewModel
 import com.example.agroajuda.ui.viewmodel.WeatherUiState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun TelaPrincipal(
@@ -176,19 +177,36 @@ fun TelaPrincipal(
             }
         }
 
-        // MUDANÇA: Botão de Status movido para o final do Box para ficar no topo da hierarquia visual
-        // Isso garante que ele receba os eventos de clique.
-        IconButton(
-            onClick = onStatusClick,
+        // MELHORIA: Indicação do status da solicitação com balão de texto para maior visibilidade
+        Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(top = 16.dp, end = 16.dp)
+                .padding(top = 12.dp, end = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = "Ver status das solicitações",
-                tint = GreenDark
-            )
+            Surface(
+                color = GreenDark,
+                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp, bottomEnd = 12.dp),
+                shadowElevation = 4.dp
+            ) {
+                Text(
+                    text = stringResource(R.string.ver_status_solicitacao),
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(4.dp))
+            IconButton(
+                onClick = onStatusClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = stringResource(R.string.ver_status_solicitacao),
+                    tint = GreenDark,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
         }
     }
 }
